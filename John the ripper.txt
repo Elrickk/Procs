@@ -1,0 +1,42 @@
+sudo apt install john
+
+Utilisation
+
+Le mot de passe des utilisateurs sont sauvegardé dans deux fichiers qui sont uniquement accessible depuis le compte root..
+Le fichier "/etc/passwd" qui contient les noms des comptes utilisateurs (logins) et le fichier "/etc/shadow" qui contient les mots de passes mais cryptés.
+
+On va devoir fusionner les 2 fichiers en un seul avec la commande "unshadow".
+
+# unshadow /etc/passwd /etc/shadow > pass.txt
+
+
+Maintenant il y a plus qu'à exécuter "John" pour décrypter notre fichier par force brute.
+
+# john pass.txt
+
+
+Par défault il va cracker les mots de passe de tout les comptes, ce qui va prendre du temps.
+Mais il est possible de spécifier le nom d'un compte à cracker ou bien avec le numéro UID.
+Exemple pour l'utilisateur toto:
+# john --users=toto pass.txt
+# john --users=1055 pass.txt
+
+Vous pouvez scpécifier le type d'attaque brute force, que les chiffres, que les lettres ...
+# john -incremental:alpha pass.txt (Seulements les lettres)
+# john -incremental:digits pass.txt (Seulements les chiffres)
+# john -incremental:lanman pass.txt (Chiffres, lettres et certains caractères scpéciaux)
+# john -incremental:all pass.txt (Tous les caractères)
+
+Pour afficher les passwords une fois le travail de fini.
+
+# john --show pass.txt
+
+
+Il est possible de faire un petit bench pour connaître la vitesse de travail du logiciel "John the Ripper" sur votre machine.
+
+# john --test
+
+
+A noter que les mots de passes trouvé sont enregistré dans un fichier:
+/home/[nom_utilisateur]/.john/john.pot
+
