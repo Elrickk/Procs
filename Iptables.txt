@@ -1,0 +1,32 @@
+yum install iptables-services
+
+Start the iptables service :
+# systemctl start iptables
+
+Enable the Iptables service to start automatically on system boot:
+# systemctl enable iptables
+
+Check the iptables service status with:
+# systemctl status iptables
+
+To check the current iptables rules use the following commands:
+# iptables -nvL
+
+By default only the SSH port 22 is open
+
+Afficher la liste des règles :
+# iptables -L
+
+Autoriser le port 80 :
+# iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+
+Supprimer une règle :
+De base pour supprimer une règle il faut connaitre sa ligne.
+Pour visualiser les lignes de la table INPUT avec leur numéro utilisez la commande suivante, sachant qu'il existe également les tables OUTPUT et FORWARD :
+# iptables -L INPUT --line-
+
+Maintenant pour effacer une règle en ligne numéro 12 dans la chaîne FORWARD, utilisez la commande
+# iptables -D FORWARD 12	
+
+Sauvegarder config Iptables :
+# /sbin/service iptables save
