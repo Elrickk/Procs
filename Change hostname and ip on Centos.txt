@@ -1,0 +1,37 @@
+Change a server’s hostname and IP
+
+    
+     # vim /etc/sysconfig/network
+
+      HOSTNAME=myserver.domain.com
+
+    Open the file at /etc/hosts. To update the information for internal networking, change the host that is associated with the main IP address for your server, as shown in the following example:
+
+     127.0.0.1      localhost localhost.localdomain
+
+     123.45.67.89   hostname.domain.com   hostname
+
+     ~
+
+     ~
+
+     ~
+
+     ~
+
+     -- INSERT --                         2,43-57    ALL
+
+    Run the hostname command. This command enables you to change the hostname on the server that the command line remembers, but it does not actively update all of the programs that are running under the old hostname. The following code provides an example:
+
+     [root@defiant ~]# hostnamectl set-hostname hostname.domain.com
+
+     [root@defiant ~]# hostname
+
+     hostname.domain.com
+
+     [root@defiant ~]#
+
+    Use the following command to restart networking on your server to ensure that changes persist on restart:
+
+     # /etc/init.d/network restart
+
