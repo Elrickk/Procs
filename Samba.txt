@@ -1,0 +1,51 @@
+Start
+sudo service smbd start
+
+Stop
+sudo service smbd stop
+
+Restart
+sudo service smbd restart
+
+
+Installer samba :
+sudo apt install samba
+
+
+Configuration :
+
+1)  Tout d'abord, modifiez les couples clé/valeur suivantes dans la section [global] de /etc/samba/smb.conf :
+
+   workgroup = EXAMPLE
+   …
+   security = user
+
+Le paramètre security situé plus bas dans la section [global] est commenté par défaut. Modifiez également EXEMPLE afin de l'adapter à votre environnement.
+
+2)  Créez une nouvelle section à la fin du fichier (ou décommentez un des exemples) pour le dossier à partager :
+
+[share]
+    comment = Dossier partagé sur le serveur Ubuntu
+    path = /srv/samba/share
+    browsable = yes
+    guest ok = yes
+    read only = no
+    create mask = 0755
+
+
+3) Maintenant que Samba est configuré, le répertoire doit être créé et les permissions modifiées. Depuis un terminal, tapez :
+
+sudo mkdir -p /srv/samba/share
+sudo chown nobody:nogroup /srv/samba/share/
+
+L'argument -p indique à mkdir de créer l'entière arborescence du répertoires si elle n'existe pas.
+
+
+4)  Redémarrer samba :
+
+sudo systemctl restart smbd.service nmbd.service
+
+
+
+
+
