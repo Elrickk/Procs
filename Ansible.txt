@@ -1,0 +1,111 @@
+yum install ansible
+
+
+Configurer le "serveur" Ansible
+
+Sur la machine qui possède Ansible, configurer le fichier /etc/hosts avec le nom des hôtes :
+
+Code BASH :
+
+# cat /etc/hosts
+127.0.0.1       localhost.localdomain localhost
+10.21.27.11     cluster1.toto.lan cluster1
+10.21.27.12     cluster2.toto.lan cluster2
+10.21.27.125    rhelsrv1
+10.21.27.127    rhelsrv2
+10.21.27.130    debsrv1
+10.21.27.121    debsrv2
+
+
+Partie SSH :
+
+On génère ensuite une paire de clés SSH :
+
+Code BASH :
+
+# ssh-keygen
+
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+Created directory '/root/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+d8:de:8e:f9:a4:44:07:a7:ec:dc:ed:81:10:ef:1e:b8 root@ANSIBLE_SERVER
+The key's randomart image is:
++--[ RSA 2048]----+
+|                 |
+|                 |
+|        o .      |
+|       + *       |
+|      . S o      |
+|       = B o     |
+|        * B o    |
+|       . O o .   |
+|        E.+ .    |
++-----------------+
+
+
+
+Puis on copie notre clé sur chaque serveur :
+
+Code BASH :
+
+# ssh-copy-id server1
+# ssh-copy-id server2
+# ssh-copy-id server3
+# ssh-copy-id cluster1
+# ssh-copy-id cluster2
+
+
+On peut vérifier le bon fonctionnement en se connectant à chacune des machines...
+
+
+
+Configuration des hôtes Ansible
+
+# cd /etc/ansible
+
+Tout se passe dans le fichier /etc/ansible/hosts. On édite le fichier. Voici un exemple :
+
+Code BASH :
+
+[rhel]
+rhelsrv1
+rhelsrv2
+[cluster]
+cluster1
+cluster2
+[sambaservers]
+debsrv1
+debsrv2
+ 
+
+
+Entre crochet, on trouve les groupes d'hôtes, avec les hôtes concernés en dessous.
+Ici, j'ai donc 3 groupes, un rhel avec les hôtes rhelsrv1 et rhelsrv2 et le groupe cluster avec cluster1 et cluster2 etc...
+
+
+
+Utiliser Ansible :
+
+Tester la communication
+
+Pour tester la communication, on peut utiliser le module ping d'Ansible :
+
+Code BASH :
+
+# ansible -m ping all
+
+
+
+Pour tester le bon fonctionnement, on va installer htop sur server1 en utilisant le module yum:
+
+Code BASH :
+
+ansible -m yum -a 'name=htop state=present' server1
+
+
+
