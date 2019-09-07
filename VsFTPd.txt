@@ -1,0 +1,37 @@
+yum install vsftpd ftp -y
+
+
+Configure vsftpd
+vi /etc/vsftpd/vsftpd.conf
+
+vi /etc/vsftpd/ftp user_list =>  Users that are not allowed to login via ftp
+
+
+Find the following lines and make the changes as shown below:
+
+ [...]
+## Disable anonymous login ##
+anonymous_enable=NO
+
+## Uncomment ##
+ascii_upload_enable=YESftpusers  user_list
+ascii_download_enable=YES
+
+## Uncomment - Enter your Welcome message - This is optional ##
+ftpd_banner=Welcome to Chris FTP service.
+
+## Add at the end of this  file ##
+use_localtime=YES
+
+
+Enable and start the vsftpd service:
+
+systemctl enable vsftpd
+systemctl start vsftpd
+
+
+
+
+
+
+
