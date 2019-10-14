@@ -1,0 +1,122 @@
+1. Installing the C/C++ Compilers and libraries
+
+Chkrootkit has C programs. You need to install the  GCC (C and C++ Compiler) and glibc-static package before compiling the chkrootkit source package to avoid any errors during the process.
+
+#yum update
+#yum install wget gcc-c++ glibc-static
+
+2. Download the latest available chkrootkit.
+
+As mentioned before, you can download the latest chkrootkit download from the chkrootkit website.
+
+# wget -c ftp://ftp.pangeia.com.br/pub/seg/pac/chkrootkit.tar.gz
+
+3. Download the package md5 hash file
+
+Next, we can download the md5 hash file associated with our chkrootkit download to verify whether it's not tampered or corrupted.
+
+# wget ftp://ftp.pangeia.com.br/pub/seg/pac/chkrootkit.md5
+# md5sum -c chkrootkit.md5
+chkrootkit.tar.gz: OK
+
+4. Extract the compressed file and install it.
+
+Now you can move to the downloaded folder and extract it. You can either extract it on the same path and move the chkrootkit binary to the /usr/bin folder or you can move the extracted contents to a separate folder by that name as described here and install it. Either way will work.
+
+    #tar –xzf chkrootkit.tar.gz
+    #mkdir /usr/local/chkrootkit
+    #mv chkrootkit-0.52/* /usr/local/chkrootkit
+    #cd /usr/local/chkrootkit
+    #make sense
+
+Now, you can run the chkrootkit to scan the server.
+
+    /usr/local/chkrootkit/chkrootkit
+
+5. Enable Automatic Server Scanning.
+
+You can add a cron entry for running chkrootkit automatically and send a scan report to your mail address. Create and add the following entries to “/etc/cron.daily/chkrootkit.sh”
+
+    #!/bin/sh
+     (
+     /usr/local/chkrootkit/chkrootkit
+     ) | /bin/mail -s 'CHROOTKIT Daily Run (ServerName)' your@email.com
+
+You can also install other security scanners like rkhunter on your system for better security.
+Understanding chkrootkit
+
+Chkrootkit is a tool to perform rootkit checks. This most importantly contains a shell script called chkrootkit which scans all system binaries for any rootkit modifications. Additionally, it contains several C programs which performs various security checks as below:
+
+ifpromisc.c: This checks if the network interface is in promiscuous mode.
+
+chklastlog.c: This checks for lastlog deletions.
+
+chkwtmp.c: This checks for wtmp deletions.
+
+chkproc.c: This checks for signs of LKM trojans.
+
+chkdirs.c: This checks for signs of LKM trojans.
+
+strings.c: This performs quick and dirty strings replacement.
+
+chkutmp.c: This checks for utmp deletions.
+Usage
+
+The simplest way to run this tool is by using the command "chkrootkit" as root. This will perform all tasks. But if you want to choose any particular options while running this command, you have various options as listed below:
+
+-h: Print a short help message and exit.
+
+# chkrootkit -h
+Usage: /usr/sbin/chkrootkit [options] [test ...]
+Options:
+-h show this help and exit
+-V show version information and exit
+-l show available tests and exit
+-d debug
+-q quiet mode
+-x expert mode
+-e exclude known false positive files/dirs, quoted,
+space separated, READ WARNING IN README
+-r dir use dir as the root directory
+-p dir1:dir2:dirN path for the external commands used by chkrootkit
+-n skip NFS mounted dirs
+
+-V: Print version information and exit.
+
+# chkrootkit -V
+chkrootkit version 0.52
+
+-l: Print available tests.
+
+# chkrootkit -l
+/usr/sbin/chkrootkit: tests: aliens asp bindshell lkm rexedcs sniffer w55808 wted scalper slapper z2 chkutmp OSX_RSPLUG amd basename biff chfn chsh cron crontab date du dirname echo egrep env find fingerd gpm grep hdparm su ifconfig inetd inetdconf identd init killall ldsopreload login ls lsof mail mingetty netstat named passwd pidof pop2 pop3 ps pstree rpcinfo rlogind rshd slogin sendmail sshd syslogd tar tcpd tcpdump top telnetd timed traceroute vdir w write
+
+-d: Enter debug mode.
+-x: Enter expert mode.
+-e: Exclude known false positive files/dirs, quoted, space separated.
+
+-q: Enter quiet mode. In this mode only output messages with `infected' status are shown.
+
+# chkrootkit -q
+Checking `tcpd'... INFECTED
+
+/lib/modules/4.15.0-20-generic/vdso/.build-id /lib/modules/4.15.0-23-generic/vdso/.build-id
+/lib/modules/4.15.0-20-generic/vdso/.build-id /lib/modules/4.15.0-23-generic/vdso/.build-id
+not tested
+INFECTED PORTS: ( 465)
+eth0: PACKET SNIFFER(/lib/systemd/systemd-networkd[536])
+not tested
+
+-r dir: Use dir as the root directory.
+
+# chkrootkit -r /mnt/ ; This will check all files under this specified directory.
+
+-p dir1:dir2:dirN: You can possibly add more binary paths separating with a colon using this option.
+
+# ./chkrootkit -p /cdrom/bin:/floppy/mybin
+
+-n: skip NFS mounted dirs
+
+
+
+
