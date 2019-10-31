@@ -1,0 +1,122 @@
+1. List all zones
+
+Use the following command to list information for all zones. Only partial output is displayed.
+
+# firewall-cmd --list-all-zones
+work
+  target: default
+  icmp-block-inversion: no
+  interfaces: 
+  sources: 
+  services: dhcpv6-client ssh
+  ports: 
+  protocols: 
+  masquerade: no
+  forward-ports: 
+  sourceports: 
+  icmp-blocks: 
+  rich rules: 
+
+drop
+  target: DROP
+  icmp-block-inversion: no
+  interfaces: 
+  sources: 
+  services: 
+  ports: 
+  protocols: 
+  masquerade: no
+  forward-ports: 
+  sourceports: 
+  icmp-blocks: 
+  rich rules: 
+.....
+
+Public is the default zone set, if you do not change it. To check the currently set default zone use the below command:
+
+# firewall-cmd --get-default-zone
+public
+
+2. List allowed service and ports on the system
+
+To show currently allowed service on your system use the below command.
+
+# firewall-cmd --list-services
+dhcpv6-client ssh
+
+To list the ports that are open on your system:
+
+# firewall-cmd --list-ports
+
+You would normally see no ports listed here when you have just enabled the firewalld.
+3. To Enable all the incoming ports for a service
+
+You can also open the required ports for a service by using the –add-seervice option. To permit access by HTTP clients for the public zone:
+
+# firewall-cmd --zone=public --add-service=http
+success
+
+To list services that are allowed for the public zone:
+
+# firewall-cmd --zone=work --list-services
+dhcpv6-client http ssh
+
+Using this command only changes the Runtime configuration and does not update the configuration files. The following sequence of commands shows that configuration changes made in Runtime configuration mode are lost when the firewalld service is restarted:
+
+# systemctl restart firewalld
+
+# firewall-cmd --zone=work --list-services
+dhcpv6-client ssh
+
+To make changes permanent, use the –permanent option. Example:
+
+# firewall-cmd --permanent --zone=public --add-service=http
+success
+
+Changes made in Permanent configuration mode are not implemented immediately. Example:
+
+# firewall-cmd --zone=work --list-services
+dhcpv6-client ssh
+
+However, changes made in a Permanent configuration are written to configuration files. Restarting the firewalld service reads the configuration files and implements the changes.
+Example:
+
+# systemctl restart firewalld
+
+# firewall-cmd --zone=work --list-services
+dhcpv6-client http ssh
+
+4. Allow traffic on an incoming port
+
+The command below will open the port 2222 effective immediately, but will not persist across reboots:
+
+# firewall-cmd --add-port=[YOUR PORT]/tcp
+
+For example, to open TCP port 2222 :
+
+# firewall-cmd --add-port=2222/tcp
+
+The following command will create a persistent rule, but will not be put into effect immediately:
+
+# firewall-cmd --permanent --add-port=[YOUR PORT]/tcp
+
+For Example, to open TCP port 2222 :
+
+# firewall-cmd --permanent --add-port=2222/tcp
+
+To list the open ports, use the command :
+
+# firewall-cmd –-list-ports
+2222/tcp
+
+5. Start and stop firewalld service
+
+To start/stop/status firewalld service use the below commands:
+
+# systemctl start firewalld.service
+# systemctl stop firewalld.service
+
+To check the status of the firewalld service:
+
+# systemctl status firewalld.service
+
