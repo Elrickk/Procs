@@ -108,4 +108,7 @@ Code BASH :
 ansible -m yum -a 'name=htop state=present' server1
 
 
+Lancer un role Ansible :
 
+Code BASH :
+ansible-playbook {role.yml]
