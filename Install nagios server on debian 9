@@ -1,0 +1,113 @@
+apt-get -y install build-essential apache2 php openssl perl make php-gd libgd2-xpm-dev libapache2-mod-php libperl-dev libssl-dev daemon wget apache2-utils unzip
+
+Version : Nagios 4.3.4
+
+
+Créez un utilisateur pour autoriser l’exécution des commandes externes via l’interface Web.
+
+utilisateur: nagios
+
+groupe: nagcmd
+
+Ajoutez également ” nagios ” et l’utilisateur apache ( www-data ) à la partie du groupe ” nagcmd “.
+
+useradd nagios
+groupadd nagcmd
+usermod -a -G nagcmd nagios
+usermod -a -G nagcmd www-data
+cd /tmp
+wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.3.4.tar.gz
+tar -zxvf nagios-4.3.4.tar.gz
+cd /tmp/nagios-4.3.4/
+
+
+Utilisez les étapes ci-dessous pour compiler Nagios à partir du code source.
+
+./configure --with-nagios-group=nagios --with-command-group=nagcmd --with-httpd_conf=/etc/apache2/sites-enabled/
+make all
+make install
+make install-init
+make install-config
+make install-commandmode
+make install-webconf
+
+
+
+Configurer Nagios
+
+Le programme d’installation a maintenant placé les fichiers de configuration dans le répertoire “/usr/local/nagios/etc“. Vous n’avez pas besoin de modifier les fichiers de configuration de Nagios pour démarrer l’outil de surveillance Nagios.
+
+
+
+Configurer l’interface Web de Nagios
+
+Créez un compte utilisateur ” nagiosadmin ” pour vous connecter à l’interface Web de Nagios. N’oubliez pas le mot de passe attribué à l’utilisateur ” nagiosadmin ” – vous en aurez besoin plus tard.
+
+Pour activer CGI, exécutez:
+
+a2enmod cgi
+
+Redémarrez le service Web Apache pour que les nouveaux paramètres prennent effet.
+
+service apache2 restart
+
+
+Télécharger et installer les plugins Nagios
+
+Maintenant, il est temps de télécharger et d’installer les plugins Nagios pour surveiller les services.
+
+cd /tmp
+wget https://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz
+tar -zxvf /tmp/nagios-plugins-2.2.1.tar.gz
+cd /tmp/nagios-plugins-2.2.1/
+
+Compilez et installez les plugins.
+
+./configure --with-nagios-user=nagios --with-nagios-group=nagios
+make
+make install
+
+
+
+Démarrer le serveur Nagios
+
+Vérifiez les exemples de fichiers de configuration Nagios.
+
+/usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+
+Démarrez l’outil de surveillance Nagios en utilisant la commande suivante.
+
+/etc/init.d/nagios start
+
+Activer Nagios pour démarrer automatiquement au démarrage du système.
+
+systemctl enable nagios
+
+
+
+Pare-feu (non obligatoire)
+
+Configurez le pare-feu pour que l’interface Web Nagios puisse être accessible depuis des machines externes.
+
+Pare-feu:
+
+firewall-cmd --permanent --add-port=80/tcp
+firewall-cmd --reload
+systemctl restart firewalld
+
+UFW:
+
+ufw allow 80/tcp
+ufw reload
+ufw enable
+
+
+Accès à l’interface Web de Nagios
+
+Maintenant, allez et accédez à l’interface Web de Nagios en utilisant l’URL ci-dessous. Le navigateur vous demandera d’entrer le nom d’utilisateur ” nagiosadmin ” et le mot de passe que vous avez spécifié précédemment.
+http://ip-address/nagios/
+
+
+Changer le mot de passe du compte nagiosadmin
+
+# htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
