@@ -1,0 +1,47 @@
+Se logger avec le user qui doit lancer la tache planifiée :
+
+Pour afficher le contenu du fichier crontab :
+
+# crontab -l
+
+
+Pour supprimer toutes les actions du fichier crontab :
+
+# crontab -r
+
+
+Pour éditer les actions du fichier crontab :
+
+# crontab -e
+
+
+
+Exemples :
+
+Exécution tous les jours à 22h00 d'une commande et rediriger les infos dans sauvegarde.log :
+
+# 00 22 * * * /root/scripts/sauvegarde.sh >> sauvegarde.log
+
+
+Exécution d'une commande toutes les 6 heures :
+
+# 00 */6 * * * /root/scripts/synchronisation-ftp.sh
+
+
+Exécution d'une commande toute les heures :
+
+# 00 */1 * * * /usr/sbin/ntpdate fr.pool.ntp.org
+
+
+Exécution d'une commande toutes les minutes uniquement les lundis :
+
+# * * * * 1 /root/script/commandes-du-lundi.sh
+
+
+Exécution d'une commande une fois par an à une heure précise (ici le 25 décembre à 00h15) :
+
+# 15 00 25 12 * echo "Le père Noël est passé !"
+Exécuter chaque jour, de chaque mois à 2:15 la commande eix-sync
+
+# 15 02  * *  * /usr/bin/eix-sync
+
