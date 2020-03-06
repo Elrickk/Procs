@@ -1,0 +1,13 @@
+Certains l'auront remarqué, depuis debian 9 (stretch), il est par défaut impossible de faire un copier coller depuis un terminal en utilisant vim.
+Afin de résoudre ce petit désagrément, il suffit d'éditer le fichier /usr/share/vim/vim80/defaults.vim et de modifier la ligne suivante:
+
+if has ('mouse')
+set mouse=a
+endif
+
+par:
+
+if has ('mouse')
+set mouse=r
+endif
+~         
