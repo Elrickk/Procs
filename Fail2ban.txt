@@ -1,0 +1,70 @@
+INSTALLATION :
+
+sudo apt-get install fail2ban
+
+et on fait une copie du fichier jail.conf pour pouvoir revenir à la config de base en cas d’erreurs.
+
+cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.conf.save
+
+
+CONFIGURATION :
+
+Nous allons maintenant modifier ce fichier pour activer la surveillance des ports voulus :
+
+sudo nano /etc/fail2ban/jail.conf
+
+
+Première étape, autoriser sa propre IP pour éviter qu’elle soit bannie.
+
+Cherchez la ligne suivante :
+ignoreip = 127.0.0.1/8
+
+et ajoutez-y votre IP :
+ignoreip = 127.0.0.1/8 1.1.1.1.1
+
+
+
+PARAMETRAGE :
+
+Bantime : temps que l’IP sera bannie (en seconde).
+bantime  = 600
+bantime  = -1  pour ban definitif
+
+Maxretry : nombre de tentatives de connexions autorisées
+maxretry = 4
+
+Fintime : temps que met l'IP pour refaire ses 4 tentatives
+findtime = 86400  (24 heures)
+
+
+
+LES PRISONS :
+
+[sshd]
+enabled = true
+port    = ssh, sftp
+filter = sshd
+logpath = /var/log/auth.log
+
+Chaque prison est configurée par défaut sur :
+enabled = false
+
+Il est donc important d’insérer cette ligne pour l’activer :
+enabled = true
+
+La ligne port indique le port qui doit être surveillé. Vous pouvez indiquer comme moi les protocoles, ou le port de SSH. 22 par défaut, ou la valeur que vous avez choisie.
+port    = ssh, sftp
+
+
+Filter indique à Fail2ban quel filtre il doit utiliser. Ici, sshd.
+Logpath est la localisation de vos fichiers logs. Sans l’accès à ces fichiers, Fail2ban ne pourra pas faire son travail.
+
+On enregistre, on quitte le fichier et on active le service.
+service fail2ban start
+
+Vous pourrez vérifier l’état de vos prisons avec
+fail2ban-client status
+
+et si vous souhaitez voir une prison particulière :
+fail2ban-client status nom_de_la_prison
+
