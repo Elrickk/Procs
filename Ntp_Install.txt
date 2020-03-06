@@ -1,0 +1,35 @@
+Installation du serveur NTP sur Debian :
+
+sudo apt install ntp
+
+
+Editez le fichier /etc/ntp.conf, remplacez les serveurs par défaut par les serveurs français :
+
+server 0.fr.pool.ntp.org iburst dynamic
+server 1.fr.pool.ntp.org iburst dynamic
+server 2.fr.pool.ntp.org iburst dynamic
+server 3.fr.pool.ntp.org iburst dynamic
+
+sudo systemctl restart ntp
+sudo systemctl enable ntp
+
+
+Voir l'état du serveur :
+
+sudo ntpq -p
+
+
+
+Installation du client NTP :
+
+sudo apt install ntp
+
+
+Editez le fichier /etc/ntp.conf, remplacez les serveurs par défaut par le serveur :
+
+server 192.168.1.X
+
+
+Voir l'état de la liaison :
+
+sudo ntpq -p
