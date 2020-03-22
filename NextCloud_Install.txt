@@ -1,0 +1,31 @@
+After successfully configuring lamp server and PhpMyAdmin on your system, Let’s download latest Nextcloud from its official website :
+
+cd /tmp
+wget https://download.nextcloud.com/server/releases/nextcloud-18.0.2.zip
+
+Now extract downloaded archive under website document root and setup appropriate permissions on files and directories :
+
+cd /var/www/html
+sudo unzip /tmp/nextcloud-18.0.2.zip
+sudo chown -R www-data:www-data nextcloud
+sudo chmod -R 755 nextcloud
+
+Now, remove the archive file :
+sudo rm -f /tmp/nextcloud-18.0.2.zip
+
+
+Configuring phpMyAdmin Manually :
+
+To begin, make a new directory where phpMyAdmin will store its temporary files:
+sudo mkdir -p /var/lib/phpmyadmin/tmp
+
+Set www-data — the Linux user profile that web servers like Apache use by default for normal operations in Ubuntu and Debian systems — as the owner of this directory :
+sudo chown -R www-data:www-data /var/lib/phpmyadmin
+
+
+Interface :
+http://IP_SERVER/nextcloud
+
+Create admin account
+
+Create Nextcloud database with a user from MariaDB
