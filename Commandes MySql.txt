@@ -1,0 +1,38 @@
+
+
+          UTILISATEURS :
+
+
+
+# Connaître le nom de l’utilisateur courant
+        SELECT current_user();
+
+# Liste des utilisateurs MariaDB
+        USE mysql;
+        SELECT User, Host FROM user;
+
+# Créer un utilisateur avec tous les droits root
+        GRANT ALL PRIVILEGES ON *.* TO "nomutilisateur"@"%" IDENTIFIED BY "motdepasse";
+        FLUSH PRIVILEGES;
+
+# Supprimer un utilisateur
+        DELETE FROM mysql.user WHERE user='<USERNAME>';        
+
+# Voir les droits d’un compte
+        SHOW GRANTS FOR 'nomutilisateur'@'hote';
+
+
+
+
+
+          DATABASES
+
+
+# Creer une database
+        CREATE DATABASE 'database_name';
+
+# Supprimer une database 
+        DROP DATABASE 'database_name';
+
+# Lister les databases
+        SHOW DATABASES;
