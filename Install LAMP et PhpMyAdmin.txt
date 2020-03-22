@@ -1,0 +1,21 @@
+# Installer Le serveur LAMP avec le script :
+./Install_LAMP_Debian.sh
+
+
+# Connexion à la Base de données
+  mysql -u root -p
+
+
+# On créé ensuite un utilisateur avec tous les droits pour ne pas utiliser root
+  CREATE USER 'user'@'localhost' IDENTIFIED BY 'password';
+  GRANT ALL PRIVILEGES ON *.* TO 'user'@'localhost' WITH GRANT OPTION;
+  FLUSH PRIVILEGES;
+
+  exit
+
+  
+# Installer PhpMyAdmin par le script
+./Install_PhpMyAdmin.sh
+
+# Se connecter à l'interface PhpMyAdmin 
+  http://IP_Server/phpmyadmin
