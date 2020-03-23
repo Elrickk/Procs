@@ -34,3 +34,7 @@ Create Nextcloud database with a user from MariaDB
 Files are in :
 /var/www/html/nextcloud/data/admin/files
 
+change directory :
+vim /var/www/html/nextcloud/config/config.php
+'datadirectory'=/home/....
+
