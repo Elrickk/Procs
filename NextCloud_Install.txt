@@ -112,6 +112,29 @@ vim /var/www/html/nextcloud/config/config.php
 'datadirectory'=/home/....
 
 
+DEPLACER LE DOSSIER DE DONNEES NEXTCLOUD :
+
+mkdir /home/ailleurs/data
+sudo mv /var/www/html/nextcloud/data /home/ailleurs/data
+
+
+il faut dire à la config de nextcloud où se trouve le nouveau dossier. éditez donc le fichier config.php
+
+sudo nano /var/www/html/nextcloud/config/config.php
+
+et changez le chemin correspondant à datadirectory dans le tableau.
+
+'datadirectory' => '/home/ailleurs/data/',
+
+Maintenant y’a plus qu’a mettre à jour la base de données de nextcloud avec ces deux commandes php à lancer dans le bon dossier
+
+cd /var/www/html/nextcloud/
+sudo -u www-data php console.php files:scan --all
+sudo -u www-data php occ maintenance:repair
+
+
+
+
 
 
 Installation d’un certificat ssl
