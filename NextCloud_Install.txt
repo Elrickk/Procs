@@ -23,12 +23,85 @@ Set www-data — the Linux user profile that web servers like Apache use by defa
 sudo chown -R www-data:www-data /var/lib/phpmyadmin
 
 
-Interface :
-http://IP_SERVER/nextcloud
+Création de la base de données Nextcloud:
 
-Create admin account
+MariaDB [(none)]> CREATE DATABASE nextclouddb;
 
-Create Nextcloud database with a user from MariaDB
+Création d’un utilisateur avec son mot de passe pour Nextcloud:
+
+MariaDB [(none)]> CREATE USER 'nextcloud_user'@'localhost' IDENTIFIED BY 'Mot_de_passe';
+
+Affectation des privilèges à l’utilisateur créé:
+
+MariaDB [(none)]>GRANT ALL PRIVILEGES ON nextclouddb.* TO 'nextcloud_user'@'localhost';
+MariaDB [(none)]>FLUSH PRIVILEGES;
+
+Enfin, quittez la base de données:
+
+MariaDB [(none)]>\q
+
+
+Passons à présent à la création d’un hôte virtuel sur le serveur. Pour ce faire, il vous faudra créer un fichier nextcloud.conf dans le dossier /etc/apache2/sites-available.
+
+# nano /etc/apache2/sites-available/nextcloud.conf
+
+Ajoutez les informations ci-dessous au nouveau fichier créé. Notez que vous pouvez remplacer les éléments en gras par vos propres informations.
+Au paramètre ServerName, insérez soit l’adresse IP de votre serveur ou votre nom de domaine.
+
+<VirtualHost *:80>
+
+DocumentRoot /var/www/html
+
+ServerName 212.*.*.224
+
+ErrorLog ${APACHE_LOG_DIR}/error.log
+
+CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+<Directory /var/www/html/>
+
+Options +FollowSymlinks
+
+AllowOverride All
+
+<IfModule mod_dav.c>
+
+Dav off
+
+</IfModule>
+
+SetEnv HOME /var/www/html
+
+SetEnv HTTP_HOME /var/www/html
+
+Satisfy Any
+
+</Directory>
+
+</VirtualHost>
+
+
+
+
+Activez à présent Nextcloud
+
+# a2ensite nextcloud
+
+Désactivez le fichier virtuel hôte par défaut:
+
+# a2dissite 000-default
+
+Puis, activez les modules d’Apache:
+
+# a2enmod rewrite headers env dir mime setenvif
+
+Et enfin, redémarrez Apache:
+
+# service apache2 restart
+
+Ouvrez votre navigateur, puis rendez-vous l’adresse: http://adresse-ip-de-votre-serveur/nextcloud
+
+
 
 
 Files are in :
@@ -37,4 +110,26 @@ Files are in :
 change directory :
 vim /var/www/html/nextcloud/config/config.php
 'datadirectory'=/home/....
+
+
+
+
+Installation d’un certificat ssl
+
+Comme vous pouvez le constater, le serveur fonctionne sur le http qui est un protocole non-sécurisé.
+Pour rendre vos connexions sécurisées, il vous faudra installer un certificat ssl sur votre serveur.
+
+Lors de son installation, Apache vient avec des certificats auto-signés. Nous utiliserons dans ce guide l’un d’eux.
+
+Vous pouvez installer l’un de ces certificats en lançant les commandes suivantes:
+
+# a2enmod ssl
+# a2ensite default-ssl
+# service apache2 reload
+
+Ouvrez à présent votre navigateur avec cette adresse: https://adresse-ip-de-votre-serveur/nextcloud
+
+Vous verrez normalement un avertissement sur le certificat utilisé (image ci-dessous).
+N’ayez aucune crainte, ce message est normal.
+Cliquez sur Avancé, puis confirmez l’exception:
 
