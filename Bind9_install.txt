@@ -1,0 +1,64 @@
+
+sudo apt-get install bind9 bind9utils dnsutils
+
+Ouvrir le fichier de configuration de bind9 : 
+sudo vim /etc/bind/named.conf.local
+
+Là, il faut paramétrer deux zones : une pour le Forward-Lookup, par lequel l’adresse IP est cherchée pour le domaine, et le Reverse-Lookup, pour la requête inverse.
+
+zone "home.lan" IN {
+            type master;
+            file "/etc/bind/db.home.lan";
+      };
+    zone "1.168.192.in-addr.arpa" {
+            type master;
+            file "/etc/bind/db.rev.1.168.192.in-addr.arpa";
+      };
+
+
+Le code indique que deux fichiers différents (db.home.lan et db.rev.1.168.192.in-addr.arpa) sont utilisés pour définir les zones. Voici comment constituer le dossier pour le Forward-Lookup :
+
+sudo vim /etc/bind/db.home.lan
+
+home.lan. IN SOA raspberry.home.lan. hostmaster.home.lan. (
+       2017081401 ; serial
+        8H ; refresh
+        4H ; retry
+        4W ; expire
+        1D ; minimum
+    )
+    home.lan. IN NS raspserv.home.lan.
+    home.lan. IN MX 10 raspserv.home.lan.
+    localhost    IN A 127.0.0.1
+    raspserv     IN A 192.168.1.165
+
+
+    Créez ensuite le fichier Reverse-Zone :
+
+    sudo vim /etc/bind/db.rev.1.168.192.in-addr.arpa
+
+    @ IN SOA raspserv.home.lan. hostmaster.home.lan. (
+        2017081401 ; serial
+        8H ; refresh
+        4H ; retry
+        4W ; expire
+        1D ; minimum
+    )
+               IN NS raspserv.home.lan.
+    1         IN PTR router.home.lan.
+    31        IN PTR raspserv.home.lan.
+
+
+    sudo vim /etc/bind/named.conf.options
+
+        forwarders {
+      8.8.8.8;
+      85.214.20.241;
+    };
+
+
+systemctl restart bind9
+systemctl enable bind9
+
+parametrer le routeur
+
