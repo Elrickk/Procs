@@ -1,0 +1,26 @@
+sudo apt install ufw
+
+Configuration des stratégies par défaut :
+Pour définir les valeurs par défaut utilisées par UFW, utilisez ces commandes:
+
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+Ces commandes définissent les valeurs par défaut pour refuser l’accès et autoriser les connexions sortantes.
+
+
+Autoriser les connexions SSH :
+sudo ufw allow ssh
+
+Autoriser un port :
+sudo ufw allow 80
+sudo ufw allow 443
+
+Refuser un port :
+sudo ufw deny 80
+
+Acitver ufw :
+ufw enable
+
+Voir l'état du firewall :
+ufw status verbose
