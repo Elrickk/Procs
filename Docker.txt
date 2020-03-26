@@ -46,50 +46,46 @@ docker search debian
 
 
 
-Tout d’abord, pour télécharger l’image du conteneur Debian souhaitée, il vous faudra exécuter :
 
+COMMANDES DOCKER :
+
+# telecharger l'image debian
 docker pull debian
 
 
-Par la suite, pour vous assurer que vos images ont bien été téléchargées, voici la commande permettant de lister toutes vos images :
-
-docker image
-
-
-
-Maintenant, pour créer un conteneur à partir de l’image « debian », lancez le programme bash et attachez votre shell grâce aux options -it :
-
+# Créer un conteneur à partir de l’image debian :
 docker run -i -t debian /bin/bash
 
 
-Vous pouvez à présent quitter et arrêter le conteneur en faisant un Ctrl + d.
+# Quitter le conteneur mais le laisser s’exécuter en arrière-plan 
+Ctrl + p + q
 
-Désormais vous êtes à nouveau sur votre machine, vous pouvez afficher la liste des conteneurs lancés avec cette commande :
 
+# Quitter et arreter coteneur 
+Ctrl + d
+
+
+# Afficher la liste des conteneurs lancés :
 docker ps
 
 
-Puisque le conteneur est arrêté, celui-ci ne s’affiche pas. Pour afficher les conteneurs arrêtés, il vous faudra ajouter l’option « -a » :
+# Afficher les conteneurs arrêtés, 
 docker ps -a
 
 
-
-Enfin, si vous souhaitez quitter le conteneur mais le laisser s’exécuter en arrière-plan, il faudra faire Ctrl + p + q.
-
-Pour continuer avec les commandes de base, vous pouvez démarrer un conteneur en arrière-plan avec la commande suivante :
-
+# Démarrer un conteneur en arrière-plan :
 docker start containerID/NAME
 
-Accédez à un conteneur démarré avec celle-ci :
 
+# Accédez à un conteneur démarré :
 docker attach containerID/NAME
 
-Et enfin pour l’arrêter il faudra exécuter :
 
+# Pour l’arrêter :
 docker stop containerID/NAME
 
-Finalement, la suppression d’un conteneur se fera avec la commande suivante :
 
+# Supprimer un conteneur:
 docker rm containerID/NAME
 
 
