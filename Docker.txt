@@ -78,7 +78,7 @@ docker start containerID/NAME
 
 
 # Accédez à un conteneur démarré :
-docker attach containerID/NAME
+docker exec -ti ID/NAME /bin/bash
 
 
 # Pour l’arrêter :
