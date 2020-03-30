@@ -1,0 +1,11 @@
+apt update returns :
+
+Les signatures suivantes n'ont pas pu être vérifiées car la clé publique n'est pas disponible :
+
+Enter command :
+
+sudo apt-get update 2>&1 | 
+sed -ne 's?^.*NO_PUBKEY ??p' |
+xargs -r -- sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys
+
+apt update
