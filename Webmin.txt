@@ -1,0 +1,28 @@
+Install :
+
+
+apt install apache2
+
+
+vim /etc/apt/sources.list
+
+Then add this line to the bottom of the file to add the new repository:
+ . . . 
+deb http://download.webmin.com/download/repository sarge contrib
+
+
+apt update
+
+Then install gnupg1:
+apt install gnupg1
+
+
+Following that, download the Webmin PGP key :
+ wget http://www.webmin.com/jcameron-key.asc
+
+Then add the package key:
+apt-key add jcameron-key.asc
+
+apt update 
+
+apt install webmin
