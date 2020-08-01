@@ -1,0 +1,31 @@
+Vous aurez besoin de deux paquets: + mailutils +, qui inclut les programmes nécessaires au fonctionnement de Postfix, et + postfix + lui-même.
+
+sudo apt install mailutils
+
+sudo apt install postfix
+
+
+
+sudo vim /etc/postfix/main.cf
+
+aller jusqu'a
+
+. . .
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+. . .
+
+Changez la ligne qui lit + inet_interfaces = all en` + + inet_interfaces = loopback-only
+
+
+sudo systemctl restart postfix
+
+
+mail de test : 
+echo "contenu du mail" | mail your@email.com -s "titre du mail"
+
+
+envoyer le contenu d'un fichier :
+cat /path/to/file | mail -s "your subject" your@email.com
+
